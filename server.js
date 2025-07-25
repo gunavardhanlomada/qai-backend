@@ -5,7 +5,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const { errorHandler } = require("./middleware/errorHandler");
-const e = require("express");
+const contactRoutes = require("./routes/contactRoutes");
 
 dotenv.config();
 
@@ -19,11 +19,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/contacts", contactRoutes);
 
-app.post("/test", (req, res) => {
-  console.log("Body received at /test:", req.body);
-  res.json({ received: req.body });
-});
 
 app.use(errorHandler);
 
