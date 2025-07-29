@@ -6,7 +6,6 @@ const protect = async (req, res, next) => {
     ? req.headers.authorization.split(" ")[1]
     : null;
 
-console.log("Token:", token);
 
   try {
     if (!token) return res.status(401).json({ message: "Not authorized, no token" });

@@ -5,9 +5,10 @@ const {
   getContacts,
   updateContactStatus,
 } = require("../controllers/contactController");
+const { protect } = require("../middleware/authMiddleware");
 
 router.post("/request", createContact);
-router.get("/getdetails", getContacts);
-router.patch("/status/:id", updateContactStatus);
+router.get("/getdetails", protect, getContacts);
+router.patch("/status/:id", protect, updateContactStatus);
 
 module.exports = router;

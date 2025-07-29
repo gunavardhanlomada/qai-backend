@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 
 
 
-// POST: Create a new contact and send email
+
 exports.createContact = async (req, res) => {
   try {
     const contact = new Contact(req.body);
@@ -40,7 +40,7 @@ exports.createContact = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(201).json({ message: "Contact saved and email sent.", contact: saved });
+    res.status(201).json({ message: "Contact saved and email sent."});
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -75,7 +75,7 @@ exports.updateContactStatus = async (req, res) => {
 
     if (!updated) return res.status(404).json({ error: "Contact not found." });
 
-    res.status(200).json({ message: "Status updated.", contact: updated });
+    res.status(200).json({ message: "Status updated." });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
