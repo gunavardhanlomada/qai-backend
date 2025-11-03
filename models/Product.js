@@ -1,21 +1,21 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const keyFeatureSchema = new mongoose.Schema({
-  name: String,
-  description: String
-}, { _id: false });
+const featureSchema = new mongoose.Schema({
+  key: String,
+  value: String,
+});
 
 const imageSchema = new mongoose.Schema({
-  name: String,
-  url: String
-}, { _id: false });
+  type: String, 
+  url: String,
+});
 
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   shortDescription: String,
   longDescription: String,
-  keyFeatures: [keyFeatureSchema],
-  images: [imageSchema]
-}, { timestamps: true });
+  features: [featureSchema],
+  images: [imageSchema],
+});
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model('Product', productSchema);

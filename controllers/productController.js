@@ -1,53 +1,32 @@
-const Product = require("../models/Product");
-// const s3 = require("../utils/s3");
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-
+const Product = require('../models/Product');
 
 exports.createProduct = async (req, res) => {
   try {
-    const product = new Product(req.body);
-    const saved = await product.save();
-    res.status(201).json({ message: "Product created", product: saved });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const { name, shortDescription, longDescription, features, images } = req.body;
+
+    const product = new Product({
+      name,
+      shortDescription,
+      longDescription,
+      features,
+      images,
+    });
+
+    const savedProduct = await product.save();
+    res.status(201).json({ message: 'Product created', product: savedProduct });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create product' });
   }
 };
 
-exports.getUploadUrl = async (req, res) => {
-  const { filename } = req.query;
-  
-    try {
-  
-      const s3 = new S3Client({
-        region: process.env.AWS_REGION,
-        credentials: {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-        }
-      });
-  
-      const command = new PutObjectCommand({
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: filename,
-        ContentType: 'image/jpeg'
-      });
-  
-      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 300  });
-  
-      res.json({ url: signedUrl });
-    } catch (err) {
-      console.error("S3 error:", err);
-      res.status(500).json({ error: "Failed to generate upload URL" });
-    }
+exports.getAllProducts = async (req, res) => {
+  const products = await Product.find();
+  res.json(products);
 };
 
-
-exports.getProducts = async (req, res) => {
-  try {
-    const products = await Product.find().sort({ createdAt: -1 });
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch products" });
-  }
+exports.getProductById = async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) return res.status(404).json({ error: 'Product not found' });
+  res.json(product);
 };

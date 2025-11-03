@@ -6,6 +6,8 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const { errorHandler } = require("./middleware/errorHandler");
 const contactRoutes = require("./routes/contactRoutes");
+const productsRoutes = require("./routes/productRoutes");
+const publicationRoutes = require("./routes/publicationRoutes")
 const cors = require('cors');
 
 dotenv.config();
@@ -13,19 +15,7 @@ connectDB();
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174','*'];
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
+app.use(cors())
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,6 +25,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/contacts", contactRoutes);
+app.use("/api/products", productsRoutes);
+app.use("/api/publications", publicationRoutes);
 
 
 app.use(errorHandler);
